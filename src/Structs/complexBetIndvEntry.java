@@ -2,21 +2,24 @@ package Structs;
 
 import Interfaces.projectConstants.MomioType;
 
-class complexBetIndvEntry extends indvBet {
+public class complexBetIndvEntry extends indvBet {
 
     private String winnerPlayer;
     private float winnerPlayerMomio;
     private MomioType winnerMomioType;
-
+    private double investment;
     private double priority;
     private double momio;
 
     @Override
     public String toString() {
         return "{" +
-                ", winnerPlayer='" + winnerPlayer + "'" +
-                ", winnerPlayerMomio='" + winnerPlayerMomio + "'" +
-                ", winnerMomioType='" + winnerMomioType + "'" +
+                " winnerPlayer='" + getWinnerPlayer() + "'" +
+                ", winnerPlayerMomio='" + getWinnerPlayerMomio() + "'" +
+                ", winnerMomioType='" + getWinnerMomioType() + "'" +
+                ", investment='" + getInvestment() + "'" +
+                ", priority='" + getPriority() + "'" +
+                ", momio='" + getMomio() + "'" +
                 "}";
     }
 
@@ -67,6 +70,14 @@ class complexBetIndvEntry extends indvBet {
 
     public MomioType getWinnerMomioType() {
         return this.winnerMomioType;
+    }
+
+    public double getInvestment() {
+        return this.investment;
+    }
+
+    public void setInvestment(double investment) {
+        this.investment = investment;
     }
 
 }

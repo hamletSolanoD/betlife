@@ -3,6 +3,8 @@ package Structs;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import Interfaces.projectConstants.MomioType;
+
 public class multipleBetEntries {
     private ArrayList<ArrayList<complexBetIndvEntry>> allTheCombinationOfEveryPossibleEvent = new ArrayList<ArrayList<complexBetIndvEntry>>();
     private ArrayList<complexBetIndvEntry> IndividualTotalEvents = new ArrayList<complexBetIndvEntry>();
@@ -54,14 +56,20 @@ public class multipleBetEntries {
             String combination_code = "";
             ArrayList<complexBetIndvEntry> newComplexBetIndvEntreArray = new ArrayList<complexBetIndvEntry>();
             for (complexBetIndvEntry individualEvent : combinationOfEvents) {
-                finalMomio *= individualEvent.getWinnerPlayerMomio();
+                finalMomio *= MomioType.momio_to_decimal(individualEvent.getWinnerPlayerMomio(),
+                        ownerHouse.getMomioType());
                 finalPriority += individualEvent.getPriority();
+
                 combination_code += "☺" + individualEvent.getWinnerPlayer();
                 newComplexBetIndvEntreArray.add(individualEvent);
             }
 
             allTheCombinationOfEveryPossibleEventWithMomio.add(
-                    new finalSingleMultipleComplexBet(finalPriority, finalMomio, ownerHouse.getMomioType(), ownerHouse,
+                    new finalSingleMultipleComplexBet(
+                            finalPriority, MomioType.momio_conversor(finalMomio, MomioType.Decimal,
+                                    ownerHouse
+                                            .getMomioType()),
+                            ownerHouse.getMomioType(), ownerHouse,
                             combination_code, newComplexBetIndvEntreArray));
         }
         Collections.sort(allTheCombinationOfEveryPossibleEventWithMomio);

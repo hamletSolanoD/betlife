@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
+import Interfaces.projectConstants;
 import Interfaces.projectConstants.MomioType;
 
 public class complexBet {
+
+    private double finalMinBetHouseInvestment;
 
     private ArrayList<indvBet> TotalEvents;
     private TreeMap<String, ArrayList<complexBetIndvEntry>> EventsGroupByEventName = new TreeMap<String, ArrayList<complexBetIndvEntry>>();
@@ -14,9 +17,6 @@ public class complexBet {
 
     public complexBet(ArrayList<indvBet> TotalEvents) {
         this.TotalEvents = TotalEvents;
-
-        generate_best_option_by_global_event();
-
     }
 
     private void fill_multipeIndvBetMap() {
@@ -62,7 +62,7 @@ public class complexBet {
         }
     }
 
-    public ArrayList<finalSingleMultipleComplexBet> generate_best_option_by_global_event() {
+    private ArrayList<finalSingleMultipleComplexBet> generate_best_option_by_global_event() {
         fill_multipeIndvBetMap();
         cast_multiple_events_by_BetHouse();
 
@@ -102,5 +102,82 @@ public class complexBet {
         }
 
         return theBestPossibleArrayWithDifferentHouses;
+    }
+
+    private double set_min_betHouse_investmant(ArrayList<betHouse> bethouses) {
+
+        double min = Double.MAX_VALUE;
+        for (betHouse bethouse : bethouses) {
+            min = min < bethouse.getTotalMoneyAmount() ? min : bethouse.getTotalMoneyAmount();
+        }
+        min *= .60;
+        finalMinBetHouseInvestment = min;
+        return min;
+
+    }
+
+    public TreeMap<finalSingleMultipleComplexBet, Double> generate_best_option_and_investment() {
+
+        ArrayList<finalSingleMultipleComplexBet> best_option_and_houses = generate_best_option_by_global_event();
+        TreeMap<String, ArrayList<finalSingleMultipleComplexBet>> multipleComplexBetsGroupByHouse = new TreeMap<String, ArrayList<finalSingleMultipleComplexBet>>();
+
+        ArrayList<betHouse> bethouses = new ArrayList<betHouse>();
+        for (finalSingleMultipleComplexBet bestOptions : best_option_and_houses) {
+            bethouses.add(bestOptions.getBetHouse());
+        }
+        set_min_betHouse_investmant(bethouses);
+
+        for (finalSingleMultipleComplexBet finalSingleMultipleComplexBet : best_option_and_houses) {
+            if (!multipleComplexBetsGroupByHouse
+                    .containsKey(finalSingleMultipleComplexBet.getBetHouse().getBetHouseName()
+                            + (finalSingleMultipleComplexBet.getBetHouse().getBetHouseLink()))) {
+                ArrayList<finalSingleMultipleComplexBet> newGroupedEvents = new ArrayList<finalSingleMultipleComplexBet>();
+                multipleComplexBetsGroupByHouse.put(finalSingleMultipleComplexBet.getBetHouse().getBetHouseName()
+                        + (finalSingleMultipleComplexBet.getBetHouse().getBetHouseLink()), newGroupedEvents);
+            }
+            ArrayList<finalSingleMultipleComplexBet> groupedEvents = multipleComplexBetsGroupByHouse
+                    .get(finalSingleMultipleComplexBet.getBetHouse().getBetHouseName()
+                            + (finalSingleMultipleComplexBet.getBetHouse().getBetHouseLink()));
+            groupedEvents.add(finalSingleMultipleComplexBet);
+
+        }
+
+        for (Entry<String, ArrayList<finalSingleMultipleComplexBet>> entryByHouse : multipleComplexBetsGroupByHouse
+                .entrySet()) {
+
+            for (finalSingleMultipleComplexBet event : entryByHouse.getValue()) {
+                double totalSumMomios = 0;
+                for (complexBetIndvEntry betIndvEntry : event.getAllTheSelectedEvents()) {
+                    totalSumMomios += MomioType.momio_to_decimal(betIndvEntry.getWinnerPlayerMomio(),
+                            betIndvEntry.getWinnerMomioType());
+                }
+
+                double InvestmentProportion = finalMinBetHouseInvestment / totalSumMomios;
+
+                for (complexBetIndvEntry betIndvEntry : event.getAllTheSelectedEvents()) {
+
+                    double investment = finalMinBetHouseInvestment * ((InvestmentProportion / MomioType
+                            .momio_to_decimal(betIndvEntry.getWinnerPlayerMomio(), betIndvEntry.getWinnerMomioType())
+                            / 100));
+
+                    System.out.println(betIndvEntry + ":" + investment);
+                    betIndvEntry.setInvestment(investment);
+
+                }
+
+            }
+
+        }
+
+        for (Entry<String, ArrayList<finalSingleMultipleComplexBet>> entry : multipleComplexBetsGroupByHouse
+                .entrySet()) {
+            for (finalSingleMultipleComplexBet bet : entry.getValue()) {
+                System.out.println(bet);
+
+            }
+        }
+
+        return null;
+
     }
 }

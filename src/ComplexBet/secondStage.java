@@ -115,7 +115,7 @@ public class secondStage extends JFrame implements ActionListener {
 
         GUI_indvBetObject eventByHouse = new GUI_indvBetObject(betHouse.getBetHouseName(), indvBet.getBetEventName(),
                 indvBet.getPlayer1Name(), indvBet.getPlayer2Name(),
-                betHouse.getBetHouseLink(), player1TextField, player2TextField, betHouse.getTotalMonetAmount(),
+                betHouse.getBetHouseLink(), player1TextField, player2TextField, betHouse.getTotalMoneyAmount(),
                 betHouse.getMomioType(), TypeOfMomioJCB);
         GUI_indvBetFields.add(eventByHouse);
 
@@ -227,7 +227,7 @@ public class secondStage extends JFrame implements ActionListener {
                 }
 
                 NEW_COMPLEX_BET = new complexBet(completedIndvBets);
-                // new thirdStage(NEW_COMPLEX_BET);
+                new thirdStage(NEW_COMPLEX_BET);
 
                 break;
 

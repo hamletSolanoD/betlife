@@ -73,12 +73,4 @@ public class betHouse {
         this.betHouseLink = betHouseLink;
     }
 
-    public double getTotalMonetAmount() {
-        return this.totalMoneyAmount;
-    }
-
-    public void setTotalMonetAmount(float totalMonetAmount) {
-        this.totalMoneyAmount = totalMonetAmount;
-    }
-
 }
