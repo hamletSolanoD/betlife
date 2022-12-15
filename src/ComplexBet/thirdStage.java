@@ -76,7 +76,7 @@ public class thirdStage extends JFrame implements ActionListener {
         personalizedThirdCell accumulatedExpense = new personalizedThirdCell(round(acumulatedInvestment, 3) + "$");
         row.add(accumulatedExpense);
 
-        acumulatedPercentage += 100 / finalBestEvents.size() - 1;
+        acumulatedPercentage += (100.0 / (double) finalBestEvents.size());
         personalizedThirdCell coveredCases = new personalizedThirdCell(round(acumulatedPercentage, 3) + "%");
         row.add(coveredCases);
 
