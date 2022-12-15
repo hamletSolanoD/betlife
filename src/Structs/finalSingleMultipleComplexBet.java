@@ -8,6 +8,7 @@ public class finalSingleMultipleComplexBet implements Comparable<finalSingleMult
     final private double priority;
     final private double momio;
     final private MomioType momioType;
+    private double investment;
     final private betHouse betHouse;
     final private String combination_code;
     final private ArrayList<complexBetIndvEntry> allTheSelectedEvents;
@@ -56,6 +57,14 @@ public class finalSingleMultipleComplexBet implements Comparable<finalSingleMult
 
     public ArrayList<complexBetIndvEntry> getAllTheSelectedEvents() {
         return this.allTheSelectedEvents;
+    }
+
+    public double getInvestment() {
+        return this.investment;
+    }
+
+    public void setInvestment(double investment) {
+        this.investment = investment;
     }
 
     @Override

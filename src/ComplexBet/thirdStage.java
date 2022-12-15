@@ -3,37 +3,46 @@ package ComplexBet;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.TreeMap;
-import java.util.Map.Entry;
 
 import javax.swing.*;
 
 import Interfaces.*;
+import Interfaces.projectConstants.MomioType;
 import Structs.*;
-import CustomComponents.*;
 
 public class thirdStage extends JFrame implements ActionListener {
 
-    private complexBet NEW_COMPLEX_BET;
+    private double acumulatedInvestment = 0;
+    private double acumulatedPercentage = 0;
 
-    TreeMap<finalSingleMultipleComplexBet, Double> finalBestEvents;
+    ArrayList<finalSingleMultipleComplexBet> finalBestEvents;
+
+    private static double round(double value, int places) {
+        if (places < 0)
+            throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(Double.toString(value));
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
 
     public thirdStage(complexBet NEW_COMPLEX_BET) {
         setBounds(0, 0, projectConstants.screenWidth, projectConstants.screenHeight);
         setLayout(new BorderLayout());
 
         finalBestEvents = NEW_COMPLEX_BET.generate_best_option_and_investment();
-        this.NEW_COMPLEX_BET = NEW_COMPLEX_BET;
 
         JPanel rows = new JPanel(new GridLayout(0, 1));
 
         rows.add(create_headers());
 
-        // for (finalSingleMultipleComplexBet finalSingleMultipleComplexBet :
-        // finalBestEvents) {
+        for (finalSingleMultipleComplexBet finalSingleMultipleComplexBet : finalBestEvents) {
+            rows.add(createDataRow(finalSingleMultipleComplexBet));
 
-        // }
+        }
 
         add(rows, BorderLayout.CENTER);
         setVisible(true);
@@ -42,37 +51,55 @@ public class thirdStage extends JFrame implements ActionListener {
 
     private JPanel createDataRow(finalSingleMultipleComplexBet finalSingleMultipleComplexBet) {
         JPanel row = new JPanel(new GridLayout(1, 0));
-        JLabel house = new JLabel(finalSingleMultipleComplexBet.getBetHouse().getBetHouseName());
+        personalizedThirdCell house = new personalizedThirdCell(
+                finalSingleMultipleComplexBet.getBetHouse().getBetHouseName());
         row.add(house);
 
         ArrayList<complexBetIndvEntry> events = finalSingleMultipleComplexBet.getAllTheSelectedEvents();
         for (complexBetIndvEntry individualEvent : events) {
-            JLabel eventsHeaders = new JLabel("<html>" + individualEvent.getWinnerPlayer() + "<br></br>"
-                    + individualEvent.getWinnerPlayerMomio());
+            personalizedThirdCell eventsHeaders = new personalizedThirdCell(
+                    "<html>" + individualEvent.getWinnerPlayer() + "<br></br>"
+                            + individualEvent.getWinnerPlayerMomio());
             row.add(eventsHeaders);
         }
 
-        JLabel probability = new JLabel(finalSingleMultipleComplexBet.getMomioType().toString() + ": "
-                + finalSingleMultipleComplexBet.getMomio());
+        personalizedThirdCell probability = new personalizedThirdCell(
+                finalSingleMultipleComplexBet.getMomioType().toString() + ": "
+                        + round(finalSingleMultipleComplexBet.getMomio(), 3));
         row.add(probability);
 
-        JLabel investment = new JLabel("Inversion");
+        personalizedThirdCell investment = new personalizedThirdCell(
+                round(finalSingleMultipleComplexBet.getInvestment(), 3) + "$");
         row.add(investment);
 
-        JLabel accumulatedExpense = new JLabel("Gasto Acumulado");
+        acumulatedInvestment += finalSingleMultipleComplexBet.getInvestment();
+        personalizedThirdCell accumulatedExpense = new personalizedThirdCell(round(acumulatedInvestment, 3) + "$");
         row.add(accumulatedExpense);
 
-        JLabel coveredCases = new JLabel("Casos Cubiertos");
+        acumulatedPercentage += 100 / finalBestEvents.size() - 1;
+        personalizedThirdCell coveredCases = new personalizedThirdCell(round(acumulatedPercentage, 3) + "%");
         row.add(coveredCases);
 
-        JLabel result = new JLabel("Resultado");
-        row.add(result);
-
-        JLabel profit = new JLabel("Ganancia");
+        personalizedThirdCell profit = new personalizedThirdCell(round(
+                (finalSingleMultipleComplexBet.getInvestment() * MomioType.momio_to_decimal(
+                        finalSingleMultipleComplexBet.getMomio(), finalSingleMultipleComplexBet.getMomioType())),
+                3) + "$");
         row.add(profit);
 
-        JLabel realProfit = new JLabel("Ganancia Real");
+        personalizedThirdCell realProfit = new personalizedThirdCell(round(
+                ((finalSingleMultipleComplexBet.getInvestment() * MomioType.momio_to_decimal(
+                        finalSingleMultipleComplexBet.getMomio(), finalSingleMultipleComplexBet.getMomioType()))
+                        - (finalSingleMultipleComplexBet
+                                .getInvestment())),
+                3) + "$");
         row.add(realProfit);
+
+        personalizedThirdCell acumulatedRealProfit = new personalizedThirdCell(round(
+                ((finalSingleMultipleComplexBet.getInvestment() * MomioType.momio_to_decimal(
+                        finalSingleMultipleComplexBet.getMomio(), finalSingleMultipleComplexBet.getMomioType()))
+                        - acumulatedInvestment),
+                3) + "$");
+        row.add(acumulatedRealProfit);
 
         return row;
     }
@@ -80,34 +107,33 @@ public class thirdStage extends JFrame implements ActionListener {
     private JPanel create_headers() {
         JPanel headers = new JPanel(new GridLayout(1, 0));
 
-        JLabel houses = new JLabel("Casas");
+        personalizedThirdCell houses = new personalizedThirdCell("Casas");
         headers.add(houses);
-        // for (complexBetIndvEntry events :
-        // finalBestEvents.get(0).getAllTheSelectedEvents()) {
-        // JLabel eventsHeaders = new JLabel(events.getBetEventName());
-        // headers.add(eventsHeaders);
-        // }
+        for (complexBetIndvEntry events : finalBestEvents.get(0).getAllTheSelectedEvents()) {
+            personalizedThirdCell eventsHeaders = new personalizedThirdCell(events.getBetEventName());
+            headers.add(eventsHeaders);
+        }
 
-        JLabel probability = new JLabel("Probabilidad");
+        personalizedThirdCell probability = new personalizedThirdCell("Probabilidad");
         headers.add(probability);
 
-        JLabel investment = new JLabel("Inversion");
+        personalizedThirdCell investment = new personalizedThirdCell("Inversion");
         headers.add(investment);
 
-        JLabel accumulatedExpense = new JLabel("Gasto Acumulado");
+        personalizedThirdCell accumulatedExpense = new personalizedThirdCell("Gasto Acumulado");
         headers.add(accumulatedExpense);
 
-        JLabel coveredCases = new JLabel("Casos Cubiertos");
+        personalizedThirdCell coveredCases = new personalizedThirdCell("Casos Cubiertos");
         headers.add(coveredCases);
 
-        JLabel result = new JLabel("Resultado");
-        headers.add(result);
-
-        JLabel profit = new JLabel("Ganancia");
+        personalizedThirdCell profit = new personalizedThirdCell("Ganancia");
         headers.add(profit);
 
-        JLabel realProfit = new JLabel("Ganancia Real");
+        personalizedThirdCell realProfit = new personalizedThirdCell("Ganancia Real Individual");
         headers.add(realProfit);
+
+        personalizedThirdCell acumulatedRealProfit = new personalizedThirdCell("Ganancia Real Acumulada");
+        headers.add(acumulatedRealProfit);
 
         return headers;
 
@@ -127,4 +153,23 @@ public class thirdStage extends JFrame implements ActionListener {
 
         }
     }
+}
+
+class personalizedThirdCell extends JLabel {
+    private void set_personalized_format() {
+        this.setBorder(BorderFactory.createLineBorder(projectConstants.details));
+
+    }
+
+    public personalizedThirdCell(String title, int truncate) {
+        super(title.substring(0, truncate));
+        set_personalized_format();
+    }
+
+    public personalizedThirdCell(String title) {
+        super(title);
+        set_personalized_format();
+
+    }
+
 }

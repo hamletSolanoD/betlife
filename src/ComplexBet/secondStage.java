@@ -16,8 +16,6 @@ import Structs.*;
 
 public class secondStage extends JFrame implements ActionListener {
 
-    private complexBet NEW_COMPLEX_BET;
-
     ArrayList<betHouse> betHouses;
     ArrayList<indvBet> indvEventsIncomplete;
 
@@ -226,7 +224,7 @@ public class secondStage extends JFrame implements ActionListener {
                     }
                 }
 
-                NEW_COMPLEX_BET = new complexBet(completedIndvBets);
+                complexBet NEW_COMPLEX_BET = new complexBet(completedIndvBets);
                 new thirdStage(NEW_COMPLEX_BET);
 
                 break;

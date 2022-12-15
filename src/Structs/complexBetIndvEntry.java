@@ -7,7 +7,6 @@ public class complexBetIndvEntry extends indvBet {
     private String winnerPlayer;
     private float winnerPlayerMomio;
     private MomioType winnerMomioType;
-    private double investment;
     private double priority;
     private double momio;
 
@@ -17,7 +16,6 @@ public class complexBetIndvEntry extends indvBet {
                 " winnerPlayer='" + getWinnerPlayer() + "'" +
                 ", winnerPlayerMomio='" + getWinnerPlayerMomio() + "'" +
                 ", winnerMomioType='" + getWinnerMomioType() + "'" +
-                ", investment='" + getInvestment() + "'" +
                 ", priority='" + getPriority() + "'" +
                 ", momio='" + getMomio() + "'" +
                 "}";
@@ -70,14 +68,6 @@ public class complexBetIndvEntry extends indvBet {
 
     public MomioType getWinnerMomioType() {
         return this.winnerMomioType;
-    }
-
-    public double getInvestment() {
-        return this.investment;
-    }
-
-    public void setInvestment(double investment) {
-        this.investment = investment;
     }
 
 }

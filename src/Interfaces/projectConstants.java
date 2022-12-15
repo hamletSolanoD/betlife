@@ -3,7 +3,6 @@ package Interfaces;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
-import java.lang.management.MemoryType;
 
 public interface projectConstants {
 	public int screenHeight = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
